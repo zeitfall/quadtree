@@ -1,0 +1,34 @@
+name: Build and Publish
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: read
+      id-token: write 
+
+    steps:
+      - name: Fetch Repository
+        uses: actions/checkout@v6
+        with:
+          ref: main
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: package.json
+          registry-url: 'https://registry.npmjs.org/'
+
+      - name: Build Library
+        run: |
+          npm ci
+          npm run build
+
+      - name: Publish
+        run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
