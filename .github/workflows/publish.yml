@@ -23,10 +23,14 @@ jobs:
           node-version-file: package.json
           registry-url: 'https://registry.npmjs.org/'
 
-      - name: Build Library
-        run: |
-          npm ci
-          npm run build
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Test
+        run: npm run test
+
+      - name: Build
+        run: npm run build
 
       - name: Publish
         run: npm publish --provenance --access public
